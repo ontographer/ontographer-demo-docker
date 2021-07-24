@@ -1,0 +1,26 @@
+FROM node:12 as node
+
+ARG PUBLIC_PATH=.
+ENV PUBLIC_URL=${PUBLIC_PATH}
+ARG REACT_APP_CONTEXT
+ENV REACT_APP_CONTEXT $REACT_APP_CONTEXT
+ARG REACT_APP_ID
+ENV REACT_APP_ID $REACT_APP_ID
+ARG REACT_APP_URL
+ENV REACT_APP_URL $REACT_APP_URL
+ARG REACT_APP_COMPONENTS
+ENV REACT_APP_COMPONENTS $REACT_APP_COMPONENTS
+ARG REACT_APP_AUTHENTICATION
+ENV REACT_APP_AUTHENTICATION $REACT_APP_AUTHENTICATION
+
+
+RUN git clone https://github.com/opendata-mvcr/ontoGrapher /ontographer
+WORKDIR /ontographer
+RUN npm install
+COPY . .
+RUN npx eslint --ext .ts,.tsx ./src/
+RUN npm run build
+
+FROM nginx:latest
+COPY --from=node /ontographer/build /usr/share/nginx/html
+EXPOSE 80

@@ -21,8 +21,6 @@ ENV PATH=${GRAPHDB_INSTALL_DIR}/bin:$PATH
 
 ADD rulesets /rulesets
 
-ADD init /root/graphdb-import
-
 RUN rm -rf ${GRAPHDB_HOME}/data
 
 COPY ./data ${GRAPHDB_HOME}/data
